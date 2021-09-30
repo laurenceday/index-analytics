@@ -1,12 +1,12 @@
 
 var ss = require('simple-statistics');
 
-import { get_excess_returns
-       , get_timeslice
-       , get_tracking_error
-       , get_overall_pct_change
-       , get_pct_returns
-       , get_portfolio_diff
+import { excess_returns
+       , timeslice
+       , tracking_error
+       , overall_pct_change
+       , pct_returns
+       , portfolio_diff
        , stdev } from './auxiliary';
 
 function beta( etf_queried   : Array<number>
@@ -27,8 +27,8 @@ function alpha( rfr             : number
               , etf_benchmark   : Array<number>
               )
 {   
-    let return_pct_queried   = get_overall_pct_change(lookback_period, etf_queried);
-    let return_pct_benchmark = get_overall_pct_change(lookback_period, etf_benchmark);
+    let return_pct_queried   = overall_pct_change(lookback_period, etf_queried);
+    let return_pct_benchmark = overall_pct_change(lookback_period, etf_benchmark);
 
     let pair_beta = beta(etf_queried, etf_benchmark);
     
@@ -50,15 +50,15 @@ function information_ratio( lookback_period : number
 {
     
     // Filter down the dataset to appropriate period
-    etf_queried = get_timeslice(lookback_period, etf_queried);
-    etf_benchmark = get_timeslice(lookback_period, etf_benchmark);
+    etf_queried = timeslice(lookback_period, etf_queried);
+    etf_benchmark = timeslice(lookback_period, etf_benchmark);
 
-    let tracking_error = get_tracking_error(etf_queried, etf_benchmark);
+    let te = tracking_error(etf_queried, etf_benchmark);
     
-    let port_returns = get_overall_pct_change(0, etf_queried);
-    let bench_returns = get_overall_pct_change(0, etf_benchmark);
+    let port_returns = overall_pct_change(0, etf_queried);
+    let bench_returns = overall_pct_change(0, etf_benchmark);
     
-    return (port_returns - bench_returns) / tracking_error;
+    return (port_returns - bench_returns) / te;
   
 }
 
@@ -68,11 +68,11 @@ function sharpe_ratio( rfr : number
                      )
 {
     // Filter down the dataset to appropriate period
-    etf_queried = get_timeslice(lookback_period, etf_queried);
+    etf_queried = timeslice(lookback_period, etf_queried);
     
-    let port_returns = get_overall_pct_change(0, etf_queried);
+    let port_returns = overall_pct_change(0, etf_queried);
     
-    let stdev_excess_returns = stdev(get_excess_returns(rfr, etf_queried));
+    let stdev_excess_returns = stdev(excess_returns(rfr, etf_queried));
 
     // The RFR - as an annual figure - should be scaled into the time we're actually looking at
     // i.e. an annual RFR of 4% considered over 10 days is actually (0.04 / 360) * 10 = 0.11%
@@ -85,9 +85,9 @@ function stdev_returns( lookback_period : number,
                         etf_queried: Array<number>
                       )
 {
-    etf_queried = get_timeslice(lookback_period, etf_queried);
+    etf_queried = timeslice(lookback_period, etf_queried);
     
-    let etf_returns = get_pct_returns(etf_queried);
+    let etf_returns = pct_returns(etf_queried);
     
     return stdev(etf_returns);
 }
