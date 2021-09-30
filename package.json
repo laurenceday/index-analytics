@@ -1,0 +1,26 @@
+{
+  "name": "index-analytics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "analytics.ts",
+  "dependencies": {
+    "simple-statistics": "^7.7.0",
+    "stdlib": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.10.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laurenceday/index-analytics.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/laurenceday/index-analytics/issues"
+  },
+  "homepage": "https://github.com/laurenceday/index-analytics#readme"
+}
